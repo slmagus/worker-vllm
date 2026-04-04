@@ -1,0 +1,7 @@
+.git
+.github
+.runpod
+*.md
+__pycache__
+*.pyc
+.env
