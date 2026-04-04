@@ -74,13 +74,21 @@ jobs:
             *.args.RELEASE_VERSION=${{ env.RELEASE_VERSION }}
             *.args.HUGGINGFACE_ACCESS_TOKEN=${{ env.HUGGINGFACE_ACCESS_TOKEN }}
 
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ env.RELEASE_VERSION }}" \
+            --title "Release ${{ env.RELEASE_VERSION }}" \
+            --generate-notes
+
       - name: Release Summary
         run: |
-          echo "🚀 Release completed!"
+          echo "Release completed!"
           echo "Version: ${{ env.RELEASE_VERSION }}"
           echo "Docker Image: ${{ env.DOCKERHUB_REPO }}/${{ env.DOCKERHUB_IMG }}:${{ env.RELEASE_VERSION }}"
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "Trigger: Manual workflow dispatch"
           else
-            echo "Trigger: GitHub release (tag: ${{ github.ref_name }})"
+            echo "Trigger: Git tag push (tag: ${{ github.ref_name }})"
           fi
